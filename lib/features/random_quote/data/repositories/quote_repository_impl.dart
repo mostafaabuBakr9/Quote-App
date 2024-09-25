@@ -1,0 +1,44 @@
+import 'package:dartz/dartz.dart';
+import 'package:quote_app/core/error/exceptions.dart';
+import 'package:quote_app/core/error/failures.dart';
+import 'package:quote_app/core/network/network_info.dart';
+import 'package:quote_app/features/random_quote/data/datasources/random_quote_local_data_source.dart';
+import 'package:quote_app/features/random_quote/data/datasources/random_quote_remote_data_source.dart';
+import 'package:quote_app/features/random_quote/data/models/quote_model.dart';
+import 'package:quote_app/features/random_quote/domain/repositories/quote_repository.dart';
+
+class QuoteRepositoryImpl implements QuoteRepository {
+  final NetworkInfo networkInfo;
+  final RandomQuoteRemoteDataSource remoteDataSource;
+  final RandomQuoteLocalDataSource localDataSource;
+  QuoteRepositoryImpl({
+    required this.networkInfo,
+    required this.remoteDataSource,
+    required this.localDataSource,
+  });
+  @override
+
+  /// Try to get a random quote from the remote data source first.
+  /// If the remote data source fails, try to get the last random quote from the local data source.
+  /// If the local data source fails, return a CacheFailure.
+  ///
+  /// Returns a Either, where the left side is a Failure and the right side is a QuoteModel.
+  Future<Either<Failure, QuoteModel>> getRandomQuote() async {
+    if (await networkInfo.isConnected) {
+      try {
+        final remoteQuote = await remoteDataSource.getRemoteRandomQuote();
+        await localDataSource.cacheRandomQuote(remoteQuote);
+        return right(remoteQuote);
+      } on ServerExceptions {
+        return left(ServerFailure());
+      }
+    } else {
+      try {
+        final localQuote = await localDataSource.getLastRandomQuote();
+        return right(localQuote);
+      } on CacheExceptions {
+        return left(CacheFailure());
+      }
+    }
+  }
+}

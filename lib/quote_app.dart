@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:quote_app/config/routes/app_routes.dart';
+import 'package:quote_app/config/themes/app_them.dart';
+import 'package:quote_app/core/utils/app_strings.dart';
 
 class QuoteApp extends StatelessWidget {
   const QuoteApp({super.key});
@@ -6,11 +9,13 @@ class QuoteApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
+      debugShowCheckedModeBanner: false,
+      title: AppStrings.appName,
+      theme: AppThemes.blueAppThemeLight(),
+      // home: const QuoteScreen(),
+
+      // routes: AppRoutes.routes,
+      onGenerateRoute: AppRoutes.onGenerateRoute,
     );
   }
 }
