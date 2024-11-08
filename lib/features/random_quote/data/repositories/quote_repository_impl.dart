@@ -4,7 +4,7 @@ import 'package:quote_app/core/error/failures.dart';
 import 'package:quote_app/core/network/network_info.dart';
 import 'package:quote_app/features/random_quote/data/datasources/random_quote_local_data_source.dart';
 import 'package:quote_app/features/random_quote/data/datasources/random_quote_remote_data_source.dart';
-import 'package:quote_app/features/random_quote/data/models/quote_model.dart';
+import 'package:quote_app/features/random_quote/domain/entities/quote.dart';
 import 'package:quote_app/features/random_quote/domain/repositories/quote_repository.dart';
 
 class QuoteRepositoryImpl implements QuoteRepository {
@@ -23,22 +23,23 @@ class QuoteRepositoryImpl implements QuoteRepository {
   /// If the local data source fails, return a CacheFailure.
   ///
   /// Returns a Either, where the left side is a Failure and the right side is a QuoteModel.
-  Future<Either<Failure, QuoteModel>> getRandomQuote() async {
-    if (await networkInfo.isConnected) {
-      try {
-        final remoteQuote = await remoteDataSource.getRemoteRandomQuote();
-        await localDataSource.cacheRandomQuote(remoteQuote);
-        return right(remoteQuote);
-      } on ServerExceptions {
-        return left(ServerFailure());
-      }
-    } else {
-      try {
-        final localQuote = await localDataSource.getLastRandomQuote();
-        return right(localQuote);
-      } on CacheExceptions {
-        return left(CacheFailure());
-      }
+  Future<Either<Failure, Quote>> getRandomQuote() async {
+    // if (await networkInfo.isConnected) {
+    try {
+      final remoteQuote = await remoteDataSource.getRemoteRandomQuote();
+      await localDataSource.cacheRandomQuote(remoteQuote);
+      return right(remoteQuote);
+    } on ServerException {
+      return left(ServerFailure());
     }
+    //   } else {
+    //     try {
+    //       final localQuote = await localDataSource.getLastRandomQuote();
+    //       return right(localQuote);
+    //     } on CacheException {
+    //       return left(CacheFailure());
+    //     }
+    //   }
+    // }
   }
 }

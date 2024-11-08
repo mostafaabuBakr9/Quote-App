@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:quote_app/features/favourite_quote/presentation/screens/favourite_quote_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:quote_app/features/random_quote/presentation/cubit/random_quote_cubit.dart';
 import 'package:quote_app/features/random_quote/presentation/screens/quote_screen.dart';
+import 'package:quote_app/features/splash_screen/presentation/screen/splash_screen.dart';
+import 'package:quote_app/injection_container.dart' as di;
 
 class AppRoutes {
   static const String initialRoute = '/';
-  static const String favouriteRoute = '/favouritequotes';
-//Named Route
-  static final routes = {
-    AppRoutes.initialRoute: (context) => const QuoteScreen(),
-    AppRoutes.favouriteRoute: (context) => const FavouriteQuoteScreen(),
-  };
+  static const String randomQuoteRoute = '/randomQuote';
+
 //for unknown route
   static Route onUnknownRoute() {
     return MaterialPageRoute(
@@ -27,10 +26,13 @@ class AppRoutes {
   static Route onGenerateRoute(RouteSettings routeSettings) {
     switch (routeSettings.name) {
       case AppRoutes.initialRoute:
-        return MaterialPageRoute(builder: (context) => const QuoteScreen());
-      case AppRoutes.favouriteRoute:
+        return MaterialPageRoute(builder: (context) => const SplashScreen());
+      case AppRoutes.randomQuoteRoute:
         return MaterialPageRoute(
-            builder: (context) => const FavouriteQuoteScreen());
+            builder: (context) => BlocProvider(
+                  create: (context) => di.sl<RandomQuoteCubit>(),
+                  child: const QuoteScreen(),
+                ));
       default:
         return onUnknownRoute();
     }

@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:quote_app/core/utils/app_colors.dart';
+import 'package:quote_app/features/random_quote/domain/entities/quote.dart';
 
 class QuoteContent extends StatelessWidget {
-  const QuoteContent({super.key});
-
+  const QuoteContent({super.key, required this.quote});
+  final Quote quote;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -14,13 +15,13 @@ class QuoteContent extends StatelessWidget {
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
           color: AppColors.primaryColor),
-      child: const Column(
+      child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.all(20),
+            padding: const EdgeInsets.all(20),
             child: Text(
-              'Mostafa AbuBakr Ahmed Hamed Mostafa AbuBakr Ahmed Hamed Mostafa AbuBakr Ahmed Hamed Mostafa AbuBakr Ahmed Hamed Mostafa AbuBakr Ahmed Hamed',
-              style: TextStyle(
+              quote.content,
+              style: const TextStyle(
                   color: Colors.white,
                   fontSize: 22,
                   fontWeight: FontWeight.bold),
@@ -30,8 +31,8 @@ class QuoteContent extends StatelessWidget {
           Padding(
             padding: EdgeInsets.all(20),
             child: Text(
-              'Mostafa AbuBakr Ahmed Hamed',
-              style: TextStyle(
+              quote.auther,
+              style: const TextStyle(
                   color: Colors.white,
                   fontSize: 22,
                   fontWeight: FontWeight.bold),

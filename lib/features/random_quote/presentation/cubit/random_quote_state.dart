@@ -8,3 +8,17 @@ abstract class RandomQuoteState extends Equatable {
 }
 
 class RandomQuoteInitial extends RandomQuoteState {}
+
+class RandomQuoteIsLoading extends RandomQuoteState {}
+
+class RandomQuoteLoaded extends RandomQuoteState {
+  final Quote randomQuote;
+
+  const RandomQuoteLoaded(this.randomQuote);
+}
+
+class RandomQuoteError extends RandomQuoteState {
+  final String message;
+
+  const RandomQuoteError({required this.message});
+}

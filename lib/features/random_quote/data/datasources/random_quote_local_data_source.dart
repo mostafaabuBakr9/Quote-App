@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:quote_app/core/error/exceptions.dart';
 import 'package:quote_app/core/utils/app_strings.dart';
 import 'package:quote_app/features/random_quote/data/models/quote_model.dart';
@@ -11,7 +10,7 @@ abstract class RandomQuoteLocalDataSource {
 }
 
 class RandomQuoteLocalDataSourceImpl implements RandomQuoteLocalDataSource {
-  final SharedPreferences sharedPreferences;
+  final SharedPreferences  sharedPreferences;
 
   RandomQuoteLocalDataSourceImpl({required this.sharedPreferences});
   @override
@@ -23,7 +22,7 @@ class RandomQuoteLocalDataSourceImpl implements RandomQuoteLocalDataSource {
           Future.value(QuoteModel.fromJson(json.decode(jsonString)));
       return cacheRandomQuote;
     } else {
-      throw CacheExceptions();
+      throw CacheException();
     }
   }
 
